@@ -1,10 +1,11 @@
 import Vec2 from './Vec2'
+import GameMap from './GameMap'
 
 // == 環境變數
 const updateFPS = 30 // 每秒執行30次, 控制update的setInterval, (1000/updateFPS)
 const bgColor = 'black'
 let time = 0
-let ww, wh
+let ww, wh, gameMap
 
 // == canvas初始化
 const canvas = document.getElementById('canvas')
@@ -21,7 +22,7 @@ ctx.line = function(v1, v2) {
   this.lineTo(v2.x, v2.y)
 }
 
-const getVec2 = args => {
+export const getVec2 = args => {
   if (args.length === 1) {
     return args[0]
   } else if (args.length === 2) {
@@ -29,55 +30,55 @@ const getVec2 = args => {
   }
 }
 
-function moveTo() {
+export function moveTo() {
   const v = getVec2(arguments)
   ctx.moveTo(v.x, v.y)
 }
 
-function lineTo() {
+export function lineTo() {
   const v = getVec2(arguments)
   ctx.lineTo(v.x, v.y)
 }
 
-function translate() {
+export function translate() {
   const v = getVec2(arguments)
   ctx.translate(v.x, v.y)
 }
 
-function arc() {
-  cta.arc.apply(ctx, arguments)
+export function arc() {
+  ctx.arc.apply(ctx, arguments)
 }
 
-function rotate(angle) {
+export function rotate(angle) {
   if (angle !== 0) {
     ctx.rotate(angle)
   }
 }
 
-function beginPath() {
+export function beginPath() {
   ctx.beginPath()
 }
 
-function closePath() {
+export function closePath() {
   ctx.closePath()
 }
 
-function setFill(color) {
+export function setFill(color) {
   ctx.fillStyle = color
 }
 
-function setStroke(color) {
+export function setStroke(color) {
   ctx.strokeStyle = color
 }
 
-function fill(color) {
+export function fill(color) {
   if (color) {
     setFill(color)
   }
   ctx.fill()
 }
 
-function stroke(color) {
+export function stroke(color) {
   if (color) {
     setStroke(color)
   }
@@ -92,7 +93,7 @@ function stroke(color) {
     fill()
   })
 */
-function save(func) {
+export function save(func) {
   ctx.save()
   func()
   ctx.restore()
@@ -104,8 +105,13 @@ function initCanvas() {
 }
 initCanvas()
 
+// 地圖格子的寬高, 要繪製 20 x 20 格子, 確保都在範圍內，除 24
+export const WSPAN = Math.min(ww, wh) / 24
+
 // == 邏輯初始化
-function init() {}
+function init() {
+  gameMap = new GameMap()
+}
 
 // == 更新畫面邏輯
 function update() {
@@ -119,6 +125,11 @@ function draw() {
   ctx.fillRect(0, 0, ww, wh)
 
   // == 在這裡開始繪製
+  save(() => {
+    // 置中
+    translate(ww / 2 - WSPAN * 10, wh / 2 - WSPAN * 10)
+    gameMap.draw()
+  })
 
   ctx.save()
   ctx.beginPath()
