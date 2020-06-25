@@ -1,3 +1,3 @@
+import '../scss/index.scss'
 import '@babel/polyfill'
-
-console.log('hello')
+import ctx from './canvas.js'
