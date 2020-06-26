@@ -1,14 +1,11 @@
 import Vec2 from './Vec2'
 import GameMap from './GameMap'
-import Pacman from './Pacman'
-import Ghost from './Ghost'
-import gsap from 'gsap'
 
 // == 環境變數
 const updateFPS = 30 // 每秒執行30次, 控制update的setInterval, (1000/updateFPS)
 const bgColor = 'black'
 export let time = 0
-let ww, wh, gameMap, pacman, ghost
+let ww, wh, gameMap
 
 // == canvas初始化
 const canvas = document.getElementById('canvas')
@@ -119,27 +116,19 @@ export function GETPOS(i, o) {
 // == 邏輯初始化
 function init() {
   gameMap = new GameMap()
-  pacman = new Pacman({
-    gridP: new Vec2(7, 7),
-  })
-
-  // 小精靈嘴巴動畫
-  gsap.to(pacman, {
-    deg: 0,
-    ease: 'linear',
-    repeat: -1,
-    yoyo: true,
-    duration: 0.15,
-  })
-
-  ghost = new Ghost({
-    gridP: new Vec2(8, 7),
-  })
 }
 
 // == 更新畫面邏輯
 function update() {
   time++ //每秒會累加30
+
+  // 讓鬼隨機移動
+  gameMap.ghosts.forEach(ghost => {
+    ghost.nextDirection = ['left', 'right', 'up', 'down'][parseInt(Math.random() * 4)]
+    if (!ghost.isMoving) {
+      ghost.moveStep()
+    }
+  })
 }
 
 // == 畫面更新
@@ -154,8 +143,8 @@ function draw() {
     translate(ww / 2 - WSPAN * 10, wh / 2 - WSPAN * 10)
     gameMap.draw()
     gameMap.foods.forEach(food => food.draw())
-    pacman.draw()
-    ghost.draw()
+    gameMap.pacman.draw()
+    gameMap.ghosts.forEach(ghost => ghost.draw())
   })
 
   ctx.save()
@@ -223,4 +212,10 @@ function mousedown(e) {
 }
 // ==滑鼠事件End ==
 
-const a = new Vec2(3, 4)
+// 鍵盤事件
+window.addEventListener('keydown', function(evt) {
+  gameMap.pacman.nextDirection = evt.key.replace('Arrow', '').toLowerCase()
+  if (!gameMap.pacman.isMoving) {
+    gameMap.pacman.moveStep()
+  }
+})

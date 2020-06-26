@@ -1,6 +1,10 @@
 import { PI } from './utils'
 import Vec2 from './Vec2'
 import Food from './Food'
+import Pacman from './Pacman'
+import Ghost from './Ghost'
+import gsap from 'gsap'
+
 import ctx, {
   WSPAN,
   GETPOS,
@@ -24,6 +28,8 @@ export default class GameMap {
       x => 沒有食物
     */
     this.foods = []
+    this.ghosts = []
+    this.pacman = null
     this.mapData = [
       'ooooooooooooooooooo',
       'o        o        o',
@@ -50,6 +56,36 @@ export default class GameMap {
   }
 
   init() {
+    // 創建小精靈
+    this.pacman = new Pacman({
+      gridP: new Vec2(9, 11),
+      gameMapGetWalls: this.getWalls.bind(this),
+      gameMapIsWall: this.isWall.bind(this),
+    })
+
+    // 小精靈嘴巴動畫
+    gsap.to(this.pacman, {
+      deg: 0,
+      ease: 'linear',
+      repeat: -1,
+      yoyo: true,
+      duration: 0.15,
+    })
+
+    // 創建四隻鬼
+    this.ghosts = []
+    for (let i = 0; i < 4; i++) {
+      this.ghosts.push(
+        new Ghost({
+          gridP: new Vec2(9 + (i % 3) - 1, 9),
+          color: ['red', '#ffa928', '#16ebff', '#ff87ab'][i],
+          gameMapGetWalls: this.getWalls.bind(this),
+          gameMapIsWall: this.isWall.bind(this),
+        })
+      )
+    }
+
+    // 創建食物
     this.foods = []
     for (let i = 0; i < 20; i++) {
       for (let o = 0; o < 20; o++) {

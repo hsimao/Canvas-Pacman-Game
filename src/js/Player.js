@@ -1,6 +1,8 @@
 import Vec2 from './Vec2'
 import GameObject from './GameObject'
-import ctx, { beginPath, fill } from './canvas'
+import GameMap from './GameMap'
+import gsap from 'gsap'
+import ctx, { GETPOS, beginPath, fill } from './canvas'
 
 export default class Player extends GameObject {
   constructor(args) {
@@ -25,5 +27,49 @@ export default class Player extends GameObject {
 
   get directionAngle() {
     return Vec2.DIR_ANGLE(this.currentDirection)
+  }
+
+  moveStep() {
+    const i0 = this.gridP.x
+    const o0 = this.gridP.y
+    const oldDirection = this.currentDirection
+
+    const haveWall = this.gameMapGetWalls(this.gridP.x, this.gridP.y)
+
+    if (!haveWall[this.nextDirection] && this.nextDirection) {
+      this.currentDirection = this.nextDirection
+    }
+    this.gridP = this.gridP.add(Vec2.DIR(this.currentDirection))
+
+    const isWall = this.gameMapIsWall(this.gridP.x, this.gridP.y)
+    if (!isWall) {
+      this.isMoving = true
+      let moveStepTime = 10 / this.speed
+
+      // 如果超出左邊界, 且是往左邊走，順移到右邊
+      if (this.gridP.x <= -1 && this.currentDirection === 'left') {
+        moveStepTime = 0
+        this.gridP.x = 18
+      }
+
+      // 如果超出右邊邊界, 且是往右邊走，順移到左邊
+      if (this.gridP.x >= 19 && this.currentDirection === 'right') {
+        moveStepTime = 0
+        this.gridP.x = 0
+      }
+
+      gsap.to(this.p, {
+        ...GETPOS(this.gridP),
+        ease: 'linear',
+        duration: moveStepTime,
+        onComplete: () => {
+          this.isMoving = false
+          this.moveStep()
+        },
+      })
+    } else {
+      this.gridP.set(i0, o0)
+      this.currentDirection = oldDirection
+    }
   }
 }
