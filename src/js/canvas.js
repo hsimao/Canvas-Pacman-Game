@@ -137,6 +137,13 @@ function update() {
 
   if (currentFood && !currentFood.eaten) {
     currentFood.eaten = true
+
+    // 吃到大力丸時, 有 10秒 鬼可以被小精靈吃掉
+    if (currentFood.super) {
+      gameMap.ghosts.forEach(ghost => {
+        ghost.setEatable(10)
+      })
+    }
   }
 }
 

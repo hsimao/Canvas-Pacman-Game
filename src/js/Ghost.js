@@ -12,6 +12,7 @@ export default class pacmanPacman extends Player {
       color: 'red',
       isEatable: false, // 是否可以被吃
       isDead: false,
+      isEatableCounter: 0, // 可以被吃的時間(秒)
     }
 
     Object.assign(def, args)
@@ -37,18 +38,25 @@ export default class pacmanPacman extends Player {
         lineTo(this.r * 0.9 - ttSpan * i, (((i + tt) % 2) - 1) * ttHeight + this.r)
       }
 
+      const hasEye = !this.isEatable
+
+      // 如果可以吃的時間小於 3 秒, 產生閃爍的白色效果
+      const eatableColor = this.isEatableCounter > 3 || time % 10 < 5 ? '#1f37ef' : '#fff'
+
       lineTo(-this.r, this.r)
       closePath()
-      fill(this.color)
+      fill(!this.isEatable ? this.color : eatableColor)
 
       // 眼白
       const eyeR = this.r / 3
       const innerEyeR = eyeR / 2
 
-      beginPath()
-      arc(-this.r / 2.5, -eyeR, eyeR, 0, PI(2))
-      arc(this.r / 2.5, -eyeR, eyeR, 0, PI(2))
-      fill('white')
+      if (hasEye) {
+        beginPath()
+        arc(-this.r / 2.5, -eyeR, eyeR, 0, PI(2))
+        arc(this.r / 2.5, -eyeR, eyeR, 0, PI(2))
+        fill('white')
+      }
 
       // 眼珠
       save(() => {
@@ -59,8 +67,27 @@ export default class pacmanPacman extends Player {
         beginPath()
         arc(-this.r / 2.5, -eyeR, innerEyeR, 0, PI(2))
         arc(this.r / 2.5, -eyeR, innerEyeR, 0, PI(2))
-        fill('black')
+        fill(hasEye ? 'black' : 'white')
       })
     })
+  }
+
+  setEatable(second) {
+    this.isEatableCounter = second
+    if (!this.isEatable) {
+      this.isEatable = true
+
+      const func = () => {
+        this.isEatableCounter--
+        console.log('isEatableCounter', this.isEatableCounter)
+
+        if (this.isEatableCounter <= 0) {
+          this.isEatable = false
+        } else {
+          setTimeout(func, 1000)
+        }
+      }
+      func()
+    }
   }
 }

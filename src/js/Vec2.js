@@ -17,7 +17,9 @@ export default class Vec2 {
   }
 
   add(v) {
-    return new Vec2(this.x + v.x, this.y + v.y)
+    if (v) {
+      return new Vec2(this.x + v.x, this.y + v.y)
+    }
   }
 
   sub(v) {
