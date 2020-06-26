@@ -129,6 +129,15 @@ function update() {
       ghost.moveStep()
     }
   })
+
+  // 判斷碰到食物, 將食物吃掉
+  const currentFood = gameMap.foods.find(food => {
+    return food.gridP.sub(gameMap.pacman.gridP).length <= 3 && food.p.sub(gameMap.pacman.p).length <= WSPAN / 2
+  })
+
+  if (currentFood && !currentFood.eaten) {
+    currentFood.eaten = true
+  }
 }
 
 // == 畫面更新
