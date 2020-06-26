@@ -78,7 +78,7 @@ export default class Vec2 {
   }
 
   static DIR(str) {
-    if (!str) return Vec2.ZERO
+    if (!str) return Vec2.ZERO()
     let type = ('' + str).toUpperCase()
     return Vec2[type]
   }
