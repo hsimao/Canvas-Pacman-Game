@@ -57,7 +57,7 @@ export default class Vec2 {
     return this.mul(1 / this.length)
   }
 
-  static get ZERO() {
+  static ZERO() {
     return new Vec2(0, 0)
   }
 

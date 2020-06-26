@@ -2,6 +2,7 @@ import Vec2 from './Vec2'
 import { PI } from './utils'
 import ctx, {
   WSPAN,
+  GETPOS,
   getVec2,
   save,
   translate,
@@ -14,11 +15,6 @@ import ctx, {
   rotate,
   arc,
 } from './canvas'
-
-function GETPOS(i, o) {
-  const sourceV = getVec2(arguments)
-  return sourceV.mul(WSPAN).add(new Vec2(WSPAN / 2, WSPAN / 2))
-}
 
 export default class GameMap {
   constructor() {
@@ -76,8 +72,10 @@ export default class GameMap {
       for (let o = 0; o < 19; o++) {
         save(() => {
           translate(GETPOS(i, o))
-          setStroke('rgba(255, 255, 255, 0.2)')
-          ctx.strokeRect(-WSPAN / 2, -WSPAN / 2, WSPAN, WSPAN)
+
+          // 格子線條
+          // setStroke('rgba(255, 255, 255, 0.2)')
+          // ctx.strokeRect(-WSPAN / 2, -WSPAN / 2, WSPAN, WSPAN)
 
           const walltype = this.getWalls(i, o)
           setStroke('blue')
@@ -99,8 +97,8 @@ export default class GameMap {
           if (walltype.none) typecode = ''
 
           // 將牆壁的 typecode 寫出來
-          setFill('white')
-          ctx.fillText(typecode, 0, 0)
+          // setFill('white')
+          // ctx.fillText(typecode, 0, 0)
 
           // 有幾面牆
           const countSide = (typecode.match(/1/g) || []).length
