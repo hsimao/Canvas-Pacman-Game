@@ -153,6 +153,7 @@ function draw() {
     // 置中
     translate(ww / 2 - WSPAN * 10, wh / 2 - WSPAN * 10)
     gameMap.draw()
+    gameMap.foods.forEach(food => food.draw())
     pacman.draw()
     ghost.draw()
   })

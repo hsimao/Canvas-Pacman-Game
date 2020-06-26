@@ -1,13 +1,12 @@
-import Vec2 from './Vec2'
 import { PI } from './utils'
+import Vec2 from './Vec2'
+import Food from './Food'
 import ctx, {
   WSPAN,
   GETPOS,
-  getVec2,
   save,
   translate,
   setStroke,
-  setFill,
   beginPath,
   lineTo,
   moveTo,
@@ -24,6 +23,7 @@ export default class GameMap {
       + => 大力丸
       x => 沒有食物
     */
+    this.foods = []
     this.mapData = [
       'ooooooooooooooooooo',
       'o        o        o',
@@ -45,6 +45,34 @@ export default class GameMap {
       'o        o        o',
       'ooooooooooooooooooo',
     ]
+
+    this.init()
+  }
+
+  init() {
+    this.foods = []
+    for (let i = 0; i < 20; i++) {
+      for (let o = 0; o < 20; o++) {
+        const foodType = this.isFood(i, o)
+        if (foodType) {
+          const food = new Food({
+            gridP: new Vec2(i, o),
+            super: foodType.super,
+          })
+          this.foods.push(food)
+        }
+      }
+    }
+  }
+
+  isFood(i, o) {
+    let type = this.getWallContent(i, o)
+    if (type === '+' || type === ' ') {
+      return {
+        super: type === '+',
+      }
+    }
+    return false
   }
 
   getWallContent(o, i) {
