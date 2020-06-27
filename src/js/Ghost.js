@@ -168,4 +168,16 @@ export default class pacmanPacman extends Player {
     this.isDead = false
     this.isEatable = false
   }
+
+  update() {
+    // 移動速度比小精靈慢一些
+    this.speed = 38
+    if (this.isEatable) this.speed = 25
+    if (this.isDead) this.speed = 80
+
+    // 如果鬼死掉後，回到中心點位置, 就復活
+    if (this.isDead && this.gridP.equal(new Vec2(9, 9))) {
+      this.reLive()
+    }
+  }
 }

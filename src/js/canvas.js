@@ -124,6 +124,8 @@ function update() {
 
   // 讓鬼隨機移動
   gameMap.ghosts.forEach(ghost => {
+    ghost.update()
+
     // 隨機移動
     // ghost.nextDirection = ['left', 'right', 'up', 'down'][parseInt(Math.random() * 4)]
 
