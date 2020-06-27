@@ -35,6 +35,6 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
-    "gsap": "^3.3.4"
+    "gsap": "^2.1.2"
   }
 }
