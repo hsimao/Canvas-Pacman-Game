@@ -10,7 +10,7 @@ module.exports = {
   },
   output: {
     // 預設output資料夾 ./dist ,也可自訂path修改如下
-    path: path.resolve(__dirname, './dist'),
+    path: path.resolve(__dirname, './docs'),
     filename: './js/[name].js?[hash:8]',
   },
   // 簡化引入路徑設定
