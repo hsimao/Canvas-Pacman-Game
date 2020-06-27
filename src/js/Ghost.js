@@ -119,7 +119,7 @@ export default class pacmanPacman extends Player {
   getNextDirection(map, pacman) {
     // 如果鬼死掉了, 移動目標改成地圖中心點
     const currentTarget = this.isDead ? new Vec2(9, 9) : pacman.gridP
-    const go = true // 往目標 true, 遠離目標 false
+    const go = !this.isEatable || this.isDead // 往目標 true, 遠離目標 false
 
     // 依據定義好的方向規則，找出可以走的方向
     const traceGo = this.traceGoCondition
