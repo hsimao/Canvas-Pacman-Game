@@ -235,7 +235,10 @@ function mousedown(e) {
 
 // 鍵盤事件
 window.addEventListener('keydown', function(evt) {
-  gameMap.pacman.nextDirection = evt.key.replace('Arrow', '').toLowerCase()
+  const direction = evt.key.replace('Arrow', '').toLowerCase()
+  if (!['left', 'right', 'up', 'down'].find(d => direction === d)) return
+
+  gameMap.pacman.nextDirection = direction
   if (!gameMap.pacman.isMoving) {
     gameMap.pacman.moveStep()
   }
