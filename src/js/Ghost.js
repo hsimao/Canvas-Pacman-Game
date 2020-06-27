@@ -101,7 +101,6 @@ export default class pacmanPacman extends Player {
 
       const func = () => {
         this.isEatableCounter--
-        console.log('isEatableCounter', this.isEatableCounter)
 
         if (this.isEatableCounter <= 0) {
           this.isEatable = false

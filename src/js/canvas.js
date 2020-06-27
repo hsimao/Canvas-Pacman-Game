@@ -106,7 +106,7 @@ function initCanvas() {
 initCanvas()
 
 // 地圖格子的寬高, 要繪製 20 x 20 格子, 確保都在範圍內，除 24
-export const WSPAN = Math.min(ww, wh) / 20
+export const WSPAN = Math.min(ww, wh) / 25
 
 export function GETPOS(i, o) {
   const sourceV = getVec2(arguments)
@@ -183,14 +183,13 @@ function draw() {
     gameMap.foods.forEach(food => food.draw())
     gameMap.pacman.draw()
     gameMap.ghosts.forEach(ghost => ghost.draw())
-  })
 
-  ctx.save()
-  ctx.beginPath()
-  ctx.fillStyle = 'white'
-  ctx.circle(mousePos, time % 30)
-  ctx.fill()
-  ctx.restore()
+    // 繪製當前分數
+    setFill('white')
+    const score = gameMap.foods.filter(f => f.eaten).length * 10
+    ctx.font = '20px Ariel'
+    ctx.fillText(`Score: ${score}`, 0, -10)
+  })
 
   // 滑鼠
   ctx.fillStyle = 'red'
