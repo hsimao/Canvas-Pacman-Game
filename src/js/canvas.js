@@ -124,7 +124,12 @@ function update() {
 
   // 讓鬼隨機移動
   gameMap.ghosts.forEach(ghost => {
-    ghost.nextDirection = ['left', 'right', 'up', 'down'][parseInt(Math.random() * 4)]
+    // 隨機移動
+    // ghost.nextDirection = ['left', 'right', 'up', 'down'][parseInt(Math.random() * 4)]
+
+    // AI 追蹤策略移動
+    ghost.nextDirection = ghost.getNextDirection(gameMap, gameMap.pacman)
+
     if (!ghost.isMoving) {
       ghost.moveStep()
     }
