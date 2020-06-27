@@ -3,7 +3,7 @@ import Vec2 from './Vec2'
 import Food from './Food'
 import Pacman from './Pacman'
 import Ghost from './Ghost'
-import gsap from 'gsap'
+import { TweenMax } from 'gsap'
 
 import ctx, {
   WSPAN,
@@ -64,12 +64,11 @@ export default class GameMap {
     })
 
     // 小精靈嘴巴動畫
-    gsap.to(this.pacman, {
+    TweenMax.to(this.pacman, 0.15, {
       deg: 0,
       ease: 'linear',
       repeat: -1,
       yoyo: true,
-      duration: 0.15,
     })
 
     // 創建四隻鬼

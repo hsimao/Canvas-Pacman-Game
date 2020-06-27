@@ -133,6 +133,21 @@ function update() {
     if (!ghost.isMoving) {
       ghost.moveStep()
     }
+
+    // 判斷小精靈與鬼的碰撞邏輯
+    if (!ghost.isDead && !gameMap.pacman.isDead && ghost.collide(gameMap.pacman)) {
+      // 如果鬼不可被吃，小精靈死亡
+      if (!ghost.isEatable) {
+        gameMap.pacman.die()
+
+        // 四秒後重置
+        setTimeout(() => {
+          gameMap.init()
+        }, 4000)
+      } else {
+        ghost.die()
+      }
+    }
   })
 
   // 判斷碰到食物, 將食物吃掉
@@ -238,8 +253,10 @@ window.addEventListener('keydown', function(evt) {
   const direction = evt.key.replace('Arrow', '').toLowerCase()
   if (!['left', 'right', 'up', 'down'].find(d => direction === d)) return
 
-  gameMap.pacman.nextDirection = direction
-  if (!gameMap.pacman.isMoving) {
-    gameMap.pacman.moveStep()
+  if (!gameMap.pacman.isDead) {
+    gameMap.pacman.nextDirection = direction
+    if (!gameMap.pacman.isMoving) {
+      gameMap.pacman.moveStep()
+    }
   }
 })

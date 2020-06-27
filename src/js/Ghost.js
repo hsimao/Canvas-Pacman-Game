@@ -41,30 +41,33 @@ export default class pacmanPacman extends Player {
   draw() {
     save(() => {
       translate(this.p)
-      beginPath()
 
-      // 繪製鬼身體
-      arc(0, 0, this.r, PI(), 0)
-      lineTo(this.r, this.r)
+      if (!this.isDead) {
+        // 繪製鬼身體
+        beginPath()
+        arc(0, 0, this.r, PI(), 0)
+        lineTo(this.r, this.r)
 
-      // 算出底部產生七個鋸齒狀的寬度
-      let tt = parseInt(time / 3)
-      const ttSpan = (this.r * 2) / 7
-      const ttHeight = this.r / 3
+        // 算出底部產生七個鋸齒狀的寬度
+        let tt = parseInt(time / 3)
+        const ttSpan = (this.r * 2) / 7
+        const ttHeight = this.r / 3
 
-      // 繪製鋸齒
-      for (let i = 0; i < 7; i++) {
-        lineTo(this.r * 0.9 - ttSpan * i, (((i + tt) % 2) - 1) * ttHeight + this.r)
+        // 繪製鋸齒
+        for (let i = 0; i < 7; i++) {
+          lineTo(this.r * 0.9 - ttSpan * i, (((i + tt) % 2) - 1) * ttHeight + this.r)
+        }
+
+        lineTo(-this.r, this.r)
+        closePath()
+
+        // 如果可以吃的時間小於 3 秒, 產生閃爍的白色效果
+        const eatableColor = this.isEatableCounter > 3 || time % 10 < 5 ? '#1f37ef' : '#fff'
+
+        fill(!this.isEatable ? this.color : eatableColor)
       }
 
-      const hasEye = !this.isEatable
-
-      // 如果可以吃的時間小於 3 秒, 產生閃爍的白色效果
-      const eatableColor = this.isEatableCounter > 3 || time % 10 < 5 ? '#1f37ef' : '#fff'
-
-      lineTo(-this.r, this.r)
-      closePath()
-      fill(!this.isEatable ? this.color : eatableColor)
+      const hasEye = !this.isEatable || this.isDead
 
       // 眼白
       const eyeR = this.r / 3
@@ -114,7 +117,8 @@ export default class pacmanPacman extends Player {
   // 可以走動，並朝小精靈的方向隨機選一個
   // 如果沒有朝小精靈的方向，就從當前可以走的方向隨機選一個
   getNextDirection(map, pacman) {
-    const currentTarget = pacman.gridP
+    // 如果鬼死掉了, 移動目標改成地圖中心點
+    const currentTarget = this.isDead ? new Vec2(9, 9) : pacman.gridP
     const go = true // 往目標 true, 遠離目標 false
 
     // 依據定義好的方向規則，找出可以走的方向
@@ -154,5 +158,14 @@ export default class pacmanPacman extends Player {
     const finalDecision = finalPossibleSets[parseInt(Math.random() * finalPossibleSets.length)] || 'up'
 
     return finalDecision
+  }
+
+  die() {
+    this.isDead = true
+  }
+
+  reLive() {
+    this.isDead = false
+    this.isEatable = false
   }
 }

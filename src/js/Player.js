@@ -1,7 +1,6 @@
 import Vec2 from './Vec2'
 import GameObject from './GameObject'
-import GameMap from './GameMap'
-import gsap from 'gsap'
+import { TweenMax } from 'gsap'
 import ctx, { GETPOS, beginPath, fill } from './canvas'
 
 export default class Player extends GameObject {
@@ -58,10 +57,9 @@ export default class Player extends GameObject {
         this.gridP.x = 0
       }
 
-      gsap.to(this.p, {
+      TweenMax.to(this.p, moveStepTime, {
         ...GETPOS(this.gridP),
         ease: 'linear',
-        duration: moveStepTime,
         onComplete: () => {
           this.isMoving = false
           this.moveStep()
